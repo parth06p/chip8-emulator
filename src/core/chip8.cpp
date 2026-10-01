@@ -80,7 +80,53 @@ bool Chip8::cycle(){
     uint16_t nnn = (opcode & 0x0FFF);
 
     switch (opcode & 0xF000){
-
+        case 0x0000:
+            if(opcode == 0x00E0){
+                display_.fill(0);
+            }
+            else{
+                std::cerr << "Unkown opcode: " << std::hex << std::setw(4) << std::setfill('0') << opcode << "\n";
+                return false;
+            }
+            break;
+        case 0xA000:
+            I_ = nnn;
+            break;
+        case 0x6000:
+            V_[x] = nn;
+            break;
+        case 0x7000:
+            V_[x] += nn;
+            break;
+        case 0x1000:
+            pc_ = nnn;
+            break;
+        case 0xD000:{
+            uint16_t startX = V_[x] % display_width;
+            uint16_t startY = V_[y] % display_height;
+            V_[0xF] = 0;
+            for(int row = 0; row < n; ++row){
+                uint16_t py = startY     + row;
+                if(py >= display_height){
+                    break;
+                }
+                uint16_t spriteByte = memory_[I_ + row];
+                for(int col = 0; col < 8; ++col){
+                    uint16_t px = startX + col;
+                    if(px >= display_width){
+                        break;
+                    }
+                    if(spriteByte & (0x80 >> col)){
+                        uint16_t index = py * display_width + px;
+                        if(display_[index] == 1){
+                            V_[0xF] = 1;
+                        }
+                        display_[index]^= 1;
+                    }
+                }
+            }
+            break;
+        }
         default:
             std::cerr << "Unkown opcode: " << std::hex << std::setw(4) << std::setfill('0') << opcode << "\n";
             return false;
