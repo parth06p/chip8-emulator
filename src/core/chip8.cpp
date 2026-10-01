@@ -63,6 +63,14 @@ void Chip8::setKey(int index, bool pressed){
         keypad_[index] = pressed;
     }
 }
+void Chip8::tickTimers() {
+    if (delay_timer_ > 0) {
+        --delay_timer_;
+    }
+    if (sound_timer_ > 0) {
+        --sound_timer_;
+    }
+}
 
 bool Chip8::cycle(){
     uint8_t high = memory_[pc_];

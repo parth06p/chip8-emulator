@@ -4,6 +4,31 @@ using namespace std;
 #include "chip8.h"
 
 const int scale = 10;
+int mapKey(SDL_Keycode key) {
+    switch (key) {
+        case SDLK_1: return 0x1;
+        case SDLK_2: return 0x2;
+        case SDLK_3: return 0x3;
+        case SDLK_4: return 0xC;
+
+        case SDLK_q: return 0x4;
+        case SDLK_w: return 0x5;
+        case SDLK_e: return 0x6;
+        case SDLK_r: return 0xD;
+
+        case SDLK_a: return 0x7;
+        case SDLK_s: return 0x8;
+        case SDLK_d: return 0x9;
+        case SDLK_f: return 0xE;
+
+        case SDLK_z: return 0xA;
+        case SDLK_x: return 0x0;
+        case SDLK_c: return 0xB;
+        case SDLK_v: return 0xF;
+
+        default: return -1;
+    }
+}
 int main(int argc, char* argv[]){
     if (argc < 2) {
         std::cerr << "Usage: chip8 <rom file>\n";
@@ -49,6 +74,24 @@ int main(int argc, char* argv[]){
                 case SDL_QUIT:
                     running = false;
                     break;
+                case SDL_KEYDOWN: {
+                    if (event.key.keysym.sym == SDLK_ESCAPE) {
+                        running = false;
+                        break;
+                    }
+                    int key = mapKey(event.key.keysym.sym);
+                    if (key != -1) {
+                        chip.setKey(key, true);
+                    }
+                    break;
+                }
+                case SDL_KEYUP: {
+                    int key = mapKey(event.key.keysym.sym);
+                    if (key != -1) {
+                        chip.setKey(key, false);
+                    }
+                    break;
+                }
                 default:
                     break;
             }
@@ -62,6 +105,7 @@ int main(int argc, char* argv[]){
                     break;
                 }
             }
+            chip.tickTimers();
         }
         SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
         SDL_RenderClear(rend);
