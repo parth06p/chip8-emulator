@@ -84,8 +84,13 @@ bool Chip8::cycle(){
             if(opcode == 0x00E0){
                 display_.fill(0);
             }
+            else if (opcode == 0x00EE){
+                if(sp_ == 0) return false;
+                sp_--;
+                pc_ = stack_[sp_];
+            }
             else{
-                std::cerr << "Unkown opcode: " << std::hex << std::setw(4) << std::setfill('0') << opcode << "\n";
+                std::cerr << "unknown opcode: " << std::hex << std::setw(4) << std::setfill('0') << opcode << "\n";
                 return false;
             }
             break;
@@ -127,8 +132,172 @@ bool Chip8::cycle(){
             }
             break;
         }
+        case 0x2000:
+            if(sp_ >= 16) return false;
+            stack_[sp_] = pc_;
+            sp_++;
+            pc_ = nnn;
+            break;
+        case 0x3000:
+            if(V_[x] == nn){
+                pc_+= 2;
+            }
+            break;
+        case 0x4000:
+            if(V_[x] != nn){
+                pc_+= 2;
+            }
+            break;
+        case 0x5000:
+            if(V_[x] == V_[y] && n == 0){
+                pc_+= 2;
+            }
+            break;
+        case 0x9000:
+            if(V_[x] != V_[y] && n == 0){
+                pc_+= 2;
+            }
+            break;
+        case 0x8000:
+            switch(n){
+                case 0:
+                    V_[x] = V_[y];
+                    break;
+                case 1:
+                    V_[x] = V_[x] | V_[y];
+                    break;
+                case 2:
+                    V_[x] = V_[x] & V_[y];
+                    break;
+                case 3:
+                    V_[x] = V_[x] ^ V_[y];
+                    break;
+                case 4:{
+                    uint16_t sum = V_[x] + V_[y];
+                    uint8_t flag = (sum > 255) ? 1 : 0;
+                    V_[x] = sum; 
+                    V_[0xF] = flag; 
+                    break;
+                }
+                case 5: {
+                    uint8_t flag = (V_[x] >= V_[y]) ? 1 : 0;
+                    V_[x] = V_[x] - V_[y];
+                    V_[0xF] = flag;
+                    break;
+                }
+                case 6: {
+                    uint8_t flag = V_[x] & 1;
+                    V_[x] = V_[x] >> 1;
+                    V_[0xF] = flag;
+                    break;
+                }
+                case 7: {
+                    uint8_t flag = (V_[y] >= V_[x]) ? 1 : 0;
+                    V_[x] = V_[y] - V_[x];
+                    V_[0xF] = flag;
+                    break;
+                }
+                case 0xE: {
+                    uint8_t flag = (V_[x] >> 7) & 1;
+                    V_[x] = V_[x] << 1;
+                    V_[0xF] = flag;
+                    break;
+                }
+                default:
+                    std::cerr << "unknown opcode: " << std::hex << std::setw(4) << std::setfill('0') << opcode << "\n";
+                    return false;
+            }
+            break;
+        case 0xB000:
+            pc_ = nnn + V_[0];
+            break;
+        case 0xC000:
+            V_[x] = (rng_() & 0xFF) & nn;
+            break;  
+        case 0xE000:
+            switch (nn) {
+                case 0x9E:
+                    if (keypad_[V_[x] & 0xF]) {
+                        pc_ += 2;
+                    }
+                    break;
+                case 0xA1:
+                    if (!keypad_[V_[x] & 0xF]) {
+                        pc_ += 2;
+                    }
+                    break;
+                default:
+                    std::cerr << "Unknown opcode: " << std::hex << std::setw(4)
+                            << std::setfill('0') << opcode << "\n";
+                    return false;
+            }
+            break;
+
+        case 0xF000:
+            switch (nn) {
+                case 0x07:
+                    V_[x] = delay_timer_;
+                    break;
+
+                case 0x0A: {
+                    bool found = false;
+                    for (int k = 0; k < 16; ++k) {
+                        if (keypad_[k]) {
+                            V_[x] = k;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        pc_ -= 2;
+                    }
+                    break;
+                }
+
+                case 0x15:
+                    delay_timer_ = V_[x];
+                    break;
+
+                case 0x18:
+                    sound_timer_ = V_[x];
+                    break;
+
+                case 0x1E:
+                    I_ = I_ + V_[x];
+                    break;
+
+                case 0x29:
+                    I_ = font_start_address + (V_[x] & 0xF) * 5;
+                    break;
+
+                case 0x33: {
+                    uint8_t value = V_[x];
+                    memory_[I_]     = value / 100;
+                    memory_[I_ + 1] = (value / 10) % 10;
+                    memory_[I_ + 2] = value % 10;
+                    break;
+                }
+
+                case 0x55:
+                    for (int i = 0; i <= x; ++i) {
+                        memory_[I_ + i] = V_[i];
+                    }
+                    break;
+
+                case 0x65:
+                    for (int i = 0; i <= x; ++i) {
+                        V_[i] = memory_[I_ + i];
+                    }
+                    break;
+
+                default:
+                    std::cerr << "Unknown opcode: " << std::hex << std::setw(4)
+                            << std::setfill('0') << opcode << "\n";
+                    return false;
+            }
+            break;
         default:
-            std::cerr << "Unkown opcode: " << std::hex << std::setw(4) << std::setfill('0') << opcode << "\n";
+            std::cerr << "unknown opcode: " << std::hex << std::setw(4) << std::setfill('0') << opcode << "\n";
             return false;
     }
     return true;
