@@ -5,24 +5,18 @@ using namespace std;
 
 const int scale = 10;
 int main(int argc, char* argv[]){
-    // initialization
-    // a. Create a Chip8 object
-    Chip8 chip;
-
-    // b. Load the ROM; stop if it fails
-    if (!chip.loadRom("roms/2-ibm-logo.ch8")) {
-        std::cerr << "Failed to load ROM\n";
+    if (argc < 2) {
+        std::cerr << "Usage: chip8 <rom file>\n";
         return 1;
     }
 
-    // c. Print the first four bytes of the program in hex
-    for (uint16_t addr = 0x200; addr < 0x204; ++addr) {
-        std::cout << std::hex << static_cast<int>(chip.readMemory(addr)) << " ";
+    Chip8 chip;
+    if (!chip.loadRom(argv[1])) {
+        std::cerr << "Failed to load ROM: " << argv[1] << "\n";
+        return 1;
     }
-    std::cout << "\n";
-
     
-
+    // initialization
     if(SDL_Init(SDL_INIT_VIDEO) != 0){
         cerr << "SDL_INIT_FAILED" << SDL_GetError() << '\n';
         return 1;
