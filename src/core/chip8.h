@@ -22,6 +22,7 @@ class Chip8{
         }
         void setKey(int index, bool pressed);
         uint8_t readMemory(uint16_t address) const { return memory_[address]; }
+        bool cycle();
     private:
         std::array<uint8_t, memory_size> memory_; //memory
         std::array<uint8_t, 16> V_; //V register

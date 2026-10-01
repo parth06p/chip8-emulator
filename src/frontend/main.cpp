@@ -19,7 +19,9 @@ int main(int argc, char* argv[]){
         std::cout << std::hex << static_cast<int>(chip.readMemory(addr)) << " ";
     }
     std::cout << "\n";
-
+    while(chip.cycle()){
+        
+    }
     if(SDL_Init(SDL_INIT_VIDEO) != 0){
         cerr << "SDL_INIT_FAILED" << SDL_GetError() << '\n';
         return 1;
