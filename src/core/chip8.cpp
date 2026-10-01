@@ -1,6 +1,7 @@
 #include "chip8.h"
 #include <fstream>
-
+#include <iostream>
+#include <iomanip>
 const std::array<uint8_t, 80> font_arr = {
     0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
     0x20, 0x60, 0x20, 0x20, 0x70, // 1
@@ -61,4 +62,28 @@ void Chip8::setKey(int index, bool pressed){
     if(index >= 0 && index < 16){
         keypad_[index] = pressed;
     }
+}
+
+bool Chip8::cycle(){
+    uint8_t high = memory_[pc_];
+    uint8_t low = memory_[pc_ + 1];
+    static_cast<uint16_t>(high);
+    static_cast<uint16_t>(high) << 8;
+    (static_cast<uint16_t>(high) << 8) | low;
+    uint16_t opcode = (static_cast<uint16_t>(high) << 8) | low;
+    pc_ += 2;
+
+    uint8_t x = (opcode & 0x0F00) >> 8;
+    uint8_t y = (opcode & 0x00F0) >> 4;
+    uint8_t n = (opcode & 0x000F);
+    uint8_t nn = (opcode & 0x00FF);
+    uint16_t nnn = (opcode & 0x0FFF);
+
+    switch (opcode & 0xF000){
+
+        default:
+            std::cerr << "Unkown opcode: " << std::hex << std::setw(4) << std::setfill('0') << opcode << "\n";
+            return false;
+    }
+    return true;
 }
