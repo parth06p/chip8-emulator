@@ -32,6 +32,7 @@ int mapKey(SDL_Keycode key) {
         default: return -1;
     }
 }
+
 struct App {
     Chip8 chip;
     SDL_Renderer* rend = nullptr;
@@ -106,7 +107,18 @@ void frame(void* arg) {
     }
     SDL_RenderPresent(app->rend);
 }
-
+static App app;
+#ifdef __EMSCRIPTEN__
+extern "C" {
+EMSCRIPTEN_KEEPALIVE
+void loadGame(const char* path, int classic) {
+    app.romPath = path;
+    app.chip.setQuirks(classic ? Quirks::classic() : Quirks::modern());
+    app.chip.reset(0);
+    app.emulating = app.chip.loadRom(app.romPath);
+}
+}
+#endif
 void audioCallback(void* userdata, Uint8* stream, int len) {
     int* phase = static_cast<int*>(userdata);
     int16_t* samples = reinterpret_cast<int16_t*>(stream);
@@ -118,9 +130,11 @@ void audioCallback(void* userdata, Uint8* stream, int len) {
     }
 }
 int main(int argc, char* argv[]){
-    static App app;
     #ifdef __EMSCRIPTEN__
-        app.romPath = (argc >= 2) ? argv[1] : "roms/outlaw.ch8";
+        app.romPath = "roms/outlaw.ch8";
+        if (argc >= 2 && argv[1] != nullptr && argv[1][0] != '\0') {
+            app.romPath = argv[1];
+        }
     #else
         if (argc < 2) {
             std::cerr << "Usage: chip8 <rom file> [--classic]\n";
@@ -128,13 +142,18 @@ int main(int argc, char* argv[]){
         }
         app.romPath = argv[1];
     #endif
+
     if (argc >= 3 && std::string(argv[2]) == "--classic") {
         app.chip.setQuirks(Quirks::classic());
     }
 
     if (!app.chip.loadRom(app.romPath)) {
         std::cerr << "Failed to load ROM: " << app.romPath << "\n";
+    #ifdef __EMSCRIPTEN__
+        app.emulating = false;
+    #else
         return 1;
+    #endif
     }
     // initialization
     if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO ) != 0){

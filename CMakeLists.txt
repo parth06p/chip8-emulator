@@ -16,8 +16,12 @@ if(EMSCRIPTEN)
   target_compile_options(chip8 PRIVATE -sUSE_SDL=2)
   target_link_options(chip8 PRIVATE
     -sUSE_SDL=2
-    --preload-file ${CMAKE_SOURCE_DIR}/web-roms@/roms)
-  set_target_properties(chip8 PROPERTIES SUFFIX ".html")
+    --preload-file ${CMAKE_SOURCE_DIR}/web-roms@/roms
+    --shell-file ${CMAKE_SOURCE_DIR}/web/shell.html
+    "-sEXPORTED_RUNTIME_METHODS=ccall,FS")
+  set_target_properties(chip8 PROPERTIES
+    SUFFIX ".html"
+    LINK_DEPENDS ${CMAKE_SOURCE_DIR}/web/shell.html)
 else()
   include(FetchContent)
   set(SDL_SHARED OFF CACHE BOOL "" FORCE)
