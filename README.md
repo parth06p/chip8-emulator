@@ -135,7 +135,3 @@ Several instructions behaved differently on the original interpreter than on lat
 - [Tobias V. Langhoff's guide to making a CHIP-8 emulator](https://tobiasvl.github.io/blog/write-a-chip-8-emulator/)
 - [CHIP-8 Archive](https://johnearnest.github.io/chip8Archive/) for freely licensed games, including *Outlaw* by John Earnest, used in the web demo
 - [Emscripten](https://emscripten.org/) for the WebAssembly toolchain
-
-## License
-
-MIT
