@@ -12,6 +12,7 @@ const uint16_t program_start_address = 0x200;
 const uint16_t font_start_address = 0x050;
 using Display = std::array<uint8_t, display_width * display_height>;
 
+
 class Chip8{
     public:
         Chip8();
@@ -23,6 +24,8 @@ class Chip8{
         void setKey(int index, bool pressed);
         uint8_t readMemory(uint16_t address) const { return memory_[address]; }
         bool cycle();
+        void tickTimers();
+        bool isSoundPlaying() const { return sound_timer_ > 0; }
     private:
         std::array<uint8_t, memory_size> memory_; //memory
         std::array<uint8_t, 16> V_; //V register
@@ -35,4 +38,5 @@ class Chip8{
         Display display_; // screen pixels
         std::array<bool, 16> keypad_; //keys
         std::mt19937 rng_; //random number
+        int waitingKey_ = -1;
 };

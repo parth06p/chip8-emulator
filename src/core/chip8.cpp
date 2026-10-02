@@ -41,6 +41,7 @@ void Chip8::reset(uint32_t seed){
     for(size_t i = 0; i < font_arr.size(); ++i){
         memory_[font_start_address+ i] = font_arr[i];
     }
+    waitingKey_ = -1;
 }
 
 bool Chip8::loadRom(const std::string& path){
@@ -61,6 +62,14 @@ bool Chip8::loadRom(const std::string& path){
 void Chip8::setKey(int index, bool pressed){
     if(index >= 0 && index < 16){
         keypad_[index] = pressed;
+    }
+}
+void Chip8::tickTimers() {
+    if (delay_timer_ > 0) {
+        --delay_timer_;
+    }
+    if (sound_timer_ > 0) {
+        --sound_timer_;
     }
 }
 
@@ -165,12 +174,15 @@ bool Chip8::cycle(){
                     break;
                 case 1:
                     V_[x] = V_[x] | V_[y];
+                    V_[0xF] = 0;
                     break;
                 case 2:
                     V_[x] = V_[x] & V_[y];
+                    V_[0xF] = 0;
                     break;
                 case 3:
                     V_[x] = V_[x] ^ V_[y];
+                    V_[0xF] = 0;
                     break;
                 case 4:{
                     uint16_t sum = V_[x] + V_[y];
@@ -186,6 +198,7 @@ bool Chip8::cycle(){
                     break;
                 }
                 case 6: {
+                    V_[x] = V_[y];
                     uint8_t flag = V_[x] & 1;
                     V_[x] = V_[x] >> 1;
                     V_[0xF] = flag;
@@ -198,6 +211,7 @@ bool Chip8::cycle(){
                     break;
                 }
                 case 0xE: {
+                    V_[x] = V_[y];
                     uint8_t flag = (V_[x] >> 7) & 1;
                     V_[x] = V_[x] << 1;
                     V_[0xF] = flag;
@@ -240,16 +254,19 @@ bool Chip8::cycle(){
                     break;
 
                 case 0x0A: {
-                    bool found = false;
-                    for (int k = 0; k < 16; ++k) {
-                        if (keypad_[k]) {
-                            V_[x] = k;
-                            found = true;
-                            break;
+                    if (waitingKey_ == -1) {
+                        for (int k = 0; k < 16; ++k) {
+                            if (keypad_[k]) {
+                                waitingKey_ = k;
+                                break;
+                            }
                         }
-                    }
-                    if (!found) {
                         pc_ -= 2;
+                    } else if (keypad_[waitingKey_]) {
+                        pc_ -= 2;
+                    } else {
+                        V_[x] = waitingKey_;
+                        waitingKey_ = -1;
                     }
                     break;
                 }
@@ -282,12 +299,14 @@ bool Chip8::cycle(){
                     for (int i = 0; i <= x; ++i) {
                         memory_[I_ + i] = V_[i];
                     }
+                    I_ = I_ + x + 1; //try
                     break;
 
                 case 0x65:
                     for (int i = 0; i <= x; ++i) {
                         V_[i] = memory_[I_ + i];
                     }
+                    I_ = I_ + x + 1; //try
                     break;
 
                 default:
