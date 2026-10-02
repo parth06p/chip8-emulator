@@ -12,6 +12,7 @@ const uint16_t program_start_address = 0x200;
 const uint16_t font_start_address = 0x050;
 using Display = std::array<uint8_t, display_width * display_height>;
 
+
 class Chip8{
     public:
         Chip8();
@@ -37,4 +38,5 @@ class Chip8{
         Display display_; // screen pixels
         std::array<bool, 16> keypad_; //keys
         std::mt19937 rng_; //random number
+        int waitingKey_ = -1;
 };

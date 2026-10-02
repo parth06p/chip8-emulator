@@ -29,6 +29,16 @@ int mapKey(SDL_Keycode key) {
         default: return -1;
     }
 }
+void audioCallback(void* userdata, Uint8* stream, int len) {
+    int* phase = static_cast<int*>(userdata);
+    int16_t* samples = reinterpret_cast<int16_t*>(stream);
+    int count = len / 2;
+
+    for (int i = 0; i < count; ++i) {
+        samples[i] = ((*phase / 50) % 2 == 0) ? 3000 : -3000;
+        ++(*phase);
+    }
+}
 int main(int argc, char* argv[]){
     if (argc < 2) {
         std::cerr << "Usage: chip8 <rom file>\n";
@@ -42,7 +52,7 @@ int main(int argc, char* argv[]){
     }
     
     // initialization
-    if(SDL_Init(SDL_INIT_VIDEO) != 0){
+    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO ) != 0){
         cerr << "SDL_INIT_FAILED" << SDL_GetError() << '\n';
         return 1;
     }
@@ -63,6 +73,19 @@ int main(int argc, char* argv[]){
         SDL_DestroyWindow(win);
         SDL_Quit(); 
         return 1;
+    }
+    int phase = 0;
+    SDL_AudioSpec want{};
+    want.freq = 44100;
+    want.format = AUDIO_S16SYS; 
+    want.channels = 1;
+    want.samples = 512;
+    want.callback = audioCallback;
+    want.userdata = &phase;
+
+    SDL_AudioDeviceID audio = SDL_OpenAudioDevice(nullptr, 0, &want, nullptr, 0);
+    if (audio == 0) {
+        std::cerr << "Audio failed: " << SDL_GetError() << " (continuing without sound)\n";
     }
     //while loop for running
     bool running = true;
@@ -106,6 +129,9 @@ int main(int argc, char* argv[]){
                 }
             }
             chip.tickTimers();
+            if (audio != 0) {
+                SDL_PauseAudioDevice(audio, chip.isSoundPlaying() ? 0 : 1);
+            }
         }
         SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
         SDL_RenderClear(rend);
@@ -123,6 +149,10 @@ int main(int argc, char* argv[]){
         SDL_RenderPresent(rend);
         SDL_Delay(16);
     }
+    if (audio != 0) {
+        SDL_CloseAudioDevice(audio);
+    }
+
     SDL_DestroyRenderer(rend);
     SDL_DestroyWindow(win);
     SDL_Quit();
