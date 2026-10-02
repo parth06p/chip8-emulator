@@ -45,6 +45,7 @@ int main(int argc, char* argv[]){
         return 1;
     }
     
+
     Chip8 chip;
     if (!chip.loadRom(argv[1])) {
         std::cerr << "Failed to load ROM: " << argv[1] << "\n";
