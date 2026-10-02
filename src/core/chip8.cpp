@@ -174,15 +174,18 @@ bool Chip8::cycle(){
                     break;
                 case 1:
                     V_[x] = V_[x] | V_[y];
-                    V_[0xF] = 0;
+                    if (quirks_.vfReset)
+                        V_[0xF] = 0;
                     break;
                 case 2:
                     V_[x] = V_[x] & V_[y];
-                    V_[0xF] = 0;
+                    if (quirks_.vfReset)
+                        V_[0xF] = 0;
                     break;
                 case 3:
                     V_[x] = V_[x] ^ V_[y];
-                    V_[0xF] = 0;
+                    if (quirks_.vfReset)
+                        V_[0xF] = 0;
                     break;
                 case 4:{
                     uint16_t sum = V_[x] + V_[y];
@@ -198,7 +201,8 @@ bool Chip8::cycle(){
                     break;
                 }
                 case 6: {
-                    V_[x] = V_[y];
+                    if (quirks_.shiftUsesVY)
+                        V_[x] = V_[y];
                     uint8_t flag = V_[x] & 1;
                     V_[x] = V_[x] >> 1;
                     V_[0xF] = flag;
@@ -211,7 +215,8 @@ bool Chip8::cycle(){
                     break;
                 }
                 case 0xE: {
-                    V_[x] = V_[y];
+                    if (quirks_.shiftUsesVY)
+                        V_[x] = V_[y];
                     uint8_t flag = (V_[x] >> 7) & 1;
                     V_[x] = V_[x] << 1;
                     V_[0xF] = flag;
@@ -223,7 +228,7 @@ bool Chip8::cycle(){
             }
             break;
         case 0xB000:
-            pc_ = nnn + V_[0];
+            pc_ = nnn + (quirks_.jumpUsesVX ? V_[x] : V_[0]);
             break;
         case 0xC000:
             V_[x] = (rng_() & 0xFF) & nn;
@@ -299,14 +304,16 @@ bool Chip8::cycle(){
                     for (int i = 0; i <= x; ++i) {
                         memory_[I_ + i] = V_[i];
                     }
-                    I_ = I_ + x + 1; //try
+                    if(quirks_.memoryIncrementI)
+                        I_ = I_ + x + 1; //try
                     break;
 
                 case 0x65:
                     for (int i = 0; i <= x; ++i) {
                         V_[i] = memory_[I_ + i];
                     }
-                    I_ = I_ + x + 1; //try
+                    if(quirks_.memoryIncrementI)
+                        I_ = I_ + x + 1; //try
                     break;
 
                 default:
