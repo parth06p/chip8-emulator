@@ -4,7 +4,7 @@ A CHIP-8 interpreter written in C++17 with SDL2. It implements the complete CHIP
 
 **[▶ Play it in your browser](https://parth06p.github.io/chip8-emulator/play/)**
 
-![IBM logo running in the emulator](docs/ibm-logo.png)
+![IBM logo running in the emulator](docs/ibm_logo.png)
 
 ## Features
 
@@ -24,6 +24,8 @@ Passes the Corax+ opcode test, the flags test, the keypad test, and the quirks t
 | Corax+ opcode test | Flags test |
 |---|---|
 | ![Corax+ results](docs/all_commands.png) | ![Flags results](docs/flags.png) |
+|Gameplay|
+![Gameplay](docs/Outlaw.gif)
 
 ## Building
 
