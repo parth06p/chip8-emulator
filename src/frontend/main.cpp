@@ -1,8 +1,8 @@
 #include <SDL.h>
 #include <iostream>
-using namespace std;
 #include "chip8.h"
-
+#include <string>
+using namespace std;
 const int scale = 10;
 int mapKey(SDL_Keycode key) {
     switch (key) {
@@ -44,11 +44,15 @@ int main(int argc, char* argv[]){
         std::cerr << "Usage: chip8 <rom file>\n";
         return 1;
     }
+    
 
     Chip8 chip;
     if (!chip.loadRom(argv[1])) {
         std::cerr << "Failed to load ROM: " << argv[1] << "\n";
         return 1;
+    }
+    if (argc >= 3 && std::string(argv[2]) == "--classic") {
+        chip.setQuirks(Quirks::classic());
     }
     
     // initialization

@@ -12,6 +12,16 @@ const uint16_t program_start_address = 0x200;
 const uint16_t font_start_address = 0x050;
 using Display = std::array<uint8_t, display_width * display_height>;
 
+struct Quirks {
+    bool vfReset;         
+    bool shiftUsesVY;     
+    bool memoryIncrementI;
+    bool displayWait;     
+    bool jumpUsesVX;       
+
+    static Quirks classic() { return {true,  true,  true,  true,  false}; }
+    static Quirks modern()  { return {false, false, false, false, false}; }
+};
 
 class Chip8{
     public:
@@ -22,10 +32,17 @@ class Chip8{
             return display_;
         }
         void setKey(int index, bool pressed);
-        uint8_t readMemory(uint16_t address) const { return memory_[address]; }
+        uint8_t readMemory(uint16_t address) const { 
+            return memory_[address]; 
+        }
         bool cycle();
         void tickTimers();
-        bool isSoundPlaying() const { return sound_timer_ > 0; }
+        bool isSoundPlaying() const { 
+            return sound_timer_ > 0; 
+        }
+        void setQuirks(const Quirks& q) { 
+            quirks_ = q; 
+        }
     private:
         std::array<uint8_t, memory_size> memory_; //memory
         std::array<uint8_t, 16> V_; //V register
@@ -39,4 +56,5 @@ class Chip8{
         std::array<bool, 16> keypad_; //keys
         std::mt19937 rng_; //random number
         int waitingKey_ = -1;
+        Quirks quirks_ = Quirks::modern();
 };
