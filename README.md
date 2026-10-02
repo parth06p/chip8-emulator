@@ -25,7 +25,7 @@ Passes the Corax+ opcode test, the flags test, the keypad test, and the quirks t
 |---|---|
 | ![Corax+ results](docs/all_commands.png) | ![Flags results](docs/flags.png) |
 
-|Gameplay|
+Gameplay
 ![Gameplay](docs/Outlaw.gif)
 
 ## Building
