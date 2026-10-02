@@ -23,7 +23,7 @@ Passes the Corax+ opcode test, the flags test, the keypad test, and the quirks t
 | ![Corax+ results](docs/all_commands.png) | ![Flags results](docs/flags.png) |
 
 |GAMEPLAY|
-![Gameplay](docs/gameplay.gif)
+![Gameplay](docs/Animal_Race.gif)
 
 ## Building
 
