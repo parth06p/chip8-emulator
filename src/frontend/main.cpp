@@ -2,6 +2,9 @@
 #include <iostream>
 #include "chip8.h"
 #include <string>
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 using namespace std;
 const int scale = 10;
 int mapKey(SDL_Keycode key) {
@@ -29,6 +32,81 @@ int mapKey(SDL_Keycode key) {
         default: return -1;
     }
 }
+struct App {
+    Chip8 chip;
+    SDL_Renderer* rend = nullptr;
+    SDL_AudioDeviceID audio = 0;
+    int phase = 0;
+    bool running = true;
+    bool emulating = true;
+    std::string romPath;
+};
+void frame(void* arg) {
+    App* app = static_cast<App*>(arg);
+    SDL_Event event;
+    while (SDL_PollEvent(&event)){
+        switch (event.type){
+            case SDL_QUIT:
+                app->running = false;
+                break;
+            case SDL_KEYDOWN: {
+                if (event.key.keysym.sym == SDLK_ESCAPE) {
+                    app->running = false;
+                    break;
+                }
+                if (event.key.keysym.sym == SDLK_BACKSPACE) {
+                    app->chip.reset(0);
+                    app->chip.loadRom(app->romPath);
+                    app->emulating = true;
+                    break;
+                }
+                int key = mapKey(event.key.keysym.sym);
+                if (key != -1) {
+                    app->chip.setKey(key, true);
+                }
+                break;
+            }
+            case SDL_KEYUP: {
+                int key = mapKey(event.key.keysym.sym);
+                if (key != -1) {
+                    app->chip.setKey(key, false);
+                }
+                break;
+            }
+            default:
+                break;
+        }
+    }
+    
+    
+    if(app->emulating){
+        for (int i = 0; i < 11; ++i) {
+            if (!app->chip.cycle()) {
+                app->emulating = false;
+                break;
+            }
+        }
+        app->chip.tickTimers();
+    }
+    if (app->audio != 0) {
+        SDL_PauseAudioDevice(app->audio, app->chip.isSoundPlaying() ? 0 : 1);
+    }
+    SDL_SetRenderDrawColor(app->rend, 0, 0, 0, 255);
+    SDL_RenderClear(app->rend);
+    SDL_SetRenderDrawColor(app->rend, 255, 255, 255, 255);
+    const Display& screen = app->chip.getDisplay();
+    for(uint16_t y = 0; y < display_height; ++y){
+        for(uint16_t x = 0; x < display_width; ++x){
+            if(screen[y*display_width + x]){
+                SDL_Rect rect{x * scale, y * scale, scale, scale};
+                SDL_RenderFillRect(app->rend, &rect);
+
+            }
+        }
+    }
+    SDL_RenderPresent(app->rend);
+}
+
 void audioCallback(void* userdata, Uint8* stream, int len) {
     int* phase = static_cast<int*>(userdata);
     int16_t* samples = reinterpret_cast<int16_t*>(stream);
@@ -40,23 +118,27 @@ void audioCallback(void* userdata, Uint8* stream, int len) {
     }
 }
 int main(int argc, char* argv[]){
-    if (argc < 2) {
-        std::cerr << "Usage: chip8 <rom file>\n";
-        return 1;
-    }
-    
-    Chip8 chip;
-    if (!chip.loadRom(argv[1])) {
-        std::cerr << "Failed to load ROM: " << argv[1] << "\n";
-        return 1;
-    }
+    static App app;
+    #ifdef __EMSCRIPTEN__
+        app.romPath = (argc >= 2) ? argv[1] : "roms/outlaw.ch8";
+    #else
+        if (argc < 2) {
+            std::cerr << "Usage: chip8 <rom file> [--classic]\n";
+            return 1;
+        }
+        app.romPath = argv[1];
+    #endif
     if (argc >= 3 && std::string(argv[2]) == "--classic") {
-        chip.setQuirks(Quirks::classic());
+        app.chip.setQuirks(Quirks::classic());
     }
-    
+
+    if (!app.chip.loadRom(app.romPath)) {
+        std::cerr << "Failed to load ROM: " << app.romPath << "\n";
+        return 1;
+    }
     // initialization
     if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO ) != 0){
-        cerr << "SDL_INIT_FAILED" << SDL_GetError() << '\n';
+        cerr << "SDL_INIT_FAILED: " << SDL_GetError() << '\n';
         return 1;
     }
     //create window
@@ -69,95 +151,44 @@ int main(int argc, char* argv[]){
         SDL_Quit();
         return 1;
     }
-    //render window
-    SDL_Renderer* rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
-    if(rend == nullptr){
-        cerr << "SDL_Rendering_FAILED: " << SDL_GetError() << '\n';
+    app.rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
+    if (app.rend == nullptr) {
+        std::cerr << "SDL_CreateRenderer failed: " << SDL_GetError() << "\n";
         SDL_DestroyWindow(win);
-        SDL_Quit(); 
+        SDL_Quit();
         return 1;
     }
-    int phase = 0;
+
     SDL_AudioSpec want{};
     want.freq = 44100;
-    want.format = AUDIO_S16SYS; 
+    want.format = AUDIO_S16SYS;
     want.channels = 1;
     want.samples = 512;
     want.callback = audioCallback;
-    want.userdata = &phase;
+    want.userdata = &app.phase;
 
-    SDL_AudioDeviceID audio = SDL_OpenAudioDevice(nullptr, 0, &want, nullptr, 0);
-    if (audio == 0) {
+    app.audio = SDL_OpenAudioDevice(nullptr, 0, &want, nullptr, 0);
+    if (app.audio == 0) {
         std::cerr << "Audio failed: " << SDL_GetError() << " (continuing without sound)\n";
     }
-    //while loop for running
-    bool running = true;
-    bool emulating = true;
-    SDL_Event event; // event used for handling user input and system message
-    while(running){
-        while (SDL_PollEvent(&event)){
-            switch (event.type){
-                case SDL_QUIT:
-                    running = false;
-                    break;
-                case SDL_KEYDOWN: {
-                    if (event.key.keysym.sym == SDLK_ESCAPE) {
-                        running = false;
-                        break;
-                    }
-                    int key = mapKey(event.key.keysym.sym);
-                    if (key != -1) {
-                        chip.setKey(key, true);
-                    }
-                    break;
-                }
-                case SDL_KEYUP: {
-                    int key = mapKey(event.key.keysym.sym);
-                    if (key != -1) {
-                        chip.setKey(key, false);
-                    }
-                    break;
-                }
-                default:
-                    break;
-            }
-        }
-        
-        
-        if(emulating){
-            for (int i = 0; i < 11; ++i) {
-                if (!chip.cycle()) {
-                    emulating = false;
-                    break;
-                }
-            }
-            chip.tickTimers();
-            if (audio != 0) {
-                SDL_PauseAudioDevice(audio, chip.isSoundPlaying() ? 0 : 1);
-            }
-        }
-        SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
-        SDL_RenderClear(rend);
-        SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
-        const Display& screen = chip.getDisplay();
-        for(uint16_t y = 0; y < display_height; ++y){
-            for(uint16_t x = 0; x < display_width; ++x){
-                if(screen[y*display_width + x]){
-                    SDL_Rect rect{x * scale, y * scale, scale, scale};
-                    SDL_RenderFillRect(rend, &rect);
 
-                }
-            }
+    //the game loop
+    #ifdef __EMSCRIPTEN__
+        emscripten_set_main_loop_arg(frame, &app, 0, 1);
+    #else
+        while (app.running) {
+            frame(&app);
+            SDL_Delay(16);
         }
-        SDL_RenderPresent(rend);
-        SDL_Delay(16);
-    }
-    if (audio != 0) {
-        SDL_CloseAudioDevice(audio);
-    }
+    #endif
 
-    SDL_DestroyRenderer(rend);
+    // Step 8: cleanup
+    if (app.audio != 0) {
+        SDL_CloseAudioDevice(app.audio);
+    }
+    SDL_DestroyRenderer(app.rend);
     SDL_DestroyWindow(win);
     SDL_Quit();
     return 0;
+
 }

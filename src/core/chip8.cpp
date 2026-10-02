@@ -76,9 +76,6 @@ void Chip8::tickTimers() {
 bool Chip8::cycle(){
     uint8_t high = memory_[pc_];
     uint8_t low = memory_[pc_ + 1];
-    static_cast<uint16_t>(high);
-    static_cast<uint16_t>(high) << 8;
-    (static_cast<uint16_t>(high) << 8) | low;
     uint16_t opcode = (static_cast<uint16_t>(high) << 8) | low;
     pc_ += 2;
 
