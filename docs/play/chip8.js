@@ -76,7 +76,7 @@ var ENVIRONMENT_IS_SHELL = !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_NODE && !ENVIR
 
 // --pre-jses are emitted after the Module integration code, so that they can
 // refer to Module (if they choose; they can also define Module)
-// include: /var/folders/1s/t2864kcd3859g116zyr1fth80000gn/T/tmpxbgabizm.js
+// include: /var/folders/1s/t2864kcd3859g116zyr1fth80000gn/T/tmpryyn9jwc.js
 
   if (!Module['expectedDataFileDownloads']) Module['expectedDataFileDownloads'] = 0;
   Module['expectedDataFileDownloads']++;
@@ -200,25 +200,25 @@ Module['FS_createPath']("/", "roms", true, true);
     }
 
     }
-    loadPackage({"files": [{"filename": "/roms/3-corax+.ch8", "start": 0, "end": 761}, {"filename": "/roms/4-flags.ch8", "start": 761, "end": 1802}, {"filename": "/roms/outlaw.ch8", "start": 1802, "end": 2314}], "remote_package_size": 2314});
+    loadPackage({"files": [{"filename": "/roms/1dcell.ch8", "start": 0, "end": 150}, {"filename": "/roms/3-corax+.ch8", "start": 150, "end": 911}, {"filename": "/roms/4-flags.ch8", "start": 911, "end": 1952}, {"filename": "/roms/8ceattourny_d1.ch8", "start": 1952, "end": 4432}, {"filename": "/roms/8ceattourny_d2.ch8", "start": 4432, "end": 7023}, {"filename": "/roms/8ceattourny_d3.ch8", "start": 7023, "end": 9308}, {"filename": "/roms/BadKaiJuJu.ch8", "start": 9308, "end": 9654}, {"filename": "/roms/RPS.ch8", "start": 9654, "end": 11671}, {"filename": "/roms/br8kout.ch8", "start": 11671, "end": 11870}, {"filename": "/roms/carbon8.ch8", "start": 11870, "end": 14167}, {"filename": "/roms/caveexplorer.ch8", "start": 14167, "end": 17466}, {"filename": "/roms/chipquarium.ch8", "start": 17466, "end": 19214}, {"filename": "/roms/chipwar.ch8", "start": 19214, "end": 20991}, {"filename": "/roms/danm8ku.ch8", "start": 20991, "end": 22310}, {"filename": "/roms/dinorun.ch8", "start": 22310, "end": 22830}, {"filename": "/roms/down8.ch8", "start": 22830, "end": 24440}, {"filename": "/roms/flightrunner.ch8", "start": 24440, "end": 24735}, {"filename": "/roms/fuse.ch8", "start": 24735, "end": 25159}, {"filename": "/roms/ghostEscape.ch8", "start": 25159, "end": 25294}, {"filename": "/roms/glitchGhost.ch8", "start": 25294, "end": 28201}, {"filename": "/roms/horseWorldOnline.ch8", "start": 28201, "end": 28933}, {"filename": "/roms/knumberknower.ch8", "start": 28933, "end": 32153}, {"filename": "/roms/masquer8.ch8", "start": 32153, "end": 35319}, {"filename": "/roms/mastermind.ch8", "start": 35319, "end": 38172}, {"filename": "/roms/mato8.ch8", "start": 38172, "end": 38545}, {"filename": "/roms/mini-lights-out.ch8", "start": 38545, "end": 39108}, {"filename": "/roms/octoachip8story.ch8", "start": 39108, "end": 42689}, {"filename": "/roms/octojam10title.ch8", "start": 42689, "end": 44579}, {"filename": "/roms/octojam1title.ch8", "start": 44579, "end": 45005}, {"filename": "/roms/octojam2title.ch8", "start": 45005, "end": 46245}, {"filename": "/roms/octojam3title.ch8", "start": 46245, "end": 46647}, {"filename": "/roms/octojam4title.ch8", "start": 46647, "end": 47119}, {"filename": "/roms/octojam5title.ch8", "start": 47119, "end": 47311}, {"filename": "/roms/octojam6title.ch8", "start": 47311, "end": 48627}, {"filename": "/roms/octojam7title.ch8", "start": 48627, "end": 50411}, {"filename": "/roms/octojam8title.ch8", "start": 50411, "end": 50855}, {"filename": "/roms/octojam9title.ch8", "start": 50855, "end": 51545}, {"filename": "/roms/octorancher.ch8", "start": 51545, "end": 54829}, {"filename": "/roms/outlaw.ch8", "start": 54829, "end": 55341}, {"filename": "/roms/petdog.ch8", "start": 55341, "end": 57210}, {"filename": "/roms/piper.ch8", "start": 57210, "end": 58798}, {"filename": "/roms/pumpkindressup.ch8", "start": 58798, "end": 60172}, {"filename": "/roms/slipperyslope.ch8", "start": 60172, "end": 62654}, {"filename": "/roms/snek.ch8", "start": 62654, "end": 62719}, {"filename": "/roms/spacejam.ch8", "start": 62719, "end": 64209}, {"filename": "/roms/spaceracer.ch8", "start": 64209, "end": 66479}, {"filename": "/roms/spockpaperscissors.ch8", "start": 66479, "end": 67827}, {"filename": "/roms/superpong.ch8", "start": 67827, "end": 68422}, {"filename": "/roms/tank.ch8", "start": 68422, "end": 70415}, {"filename": "/roms/tick.ch8", "start": 70415, "end": 71241}, {"filename": "/roms/tombstontipp.ch8", "start": 71241, "end": 71733}, {"filename": "/roms/wdl.ch8", "start": 71733, "end": 74638}], "remote_package_size": 74638});
 
   })();
 
-// end include: /var/folders/1s/t2864kcd3859g116zyr1fth80000gn/T/tmpxbgabizm.js
-// include: /var/folders/1s/t2864kcd3859g116zyr1fth80000gn/T/tmpbgnbt_zx.js
+// end include: /var/folders/1s/t2864kcd3859g116zyr1fth80000gn/T/tmpryyn9jwc.js
+// include: /var/folders/1s/t2864kcd3859g116zyr1fth80000gn/T/tmppoehqinw.js
 
     // All the pre-js content up to here must remain later on, we need to run
     // it.
     if ((typeof ENVIRONMENT_IS_WASM_WORKER != 'undefined' && ENVIRONMENT_IS_WASM_WORKER) || (typeof ENVIRONMENT_IS_PTHREAD != 'undefined' && ENVIRONMENT_IS_PTHREAD) || (typeof ENVIRONMENT_IS_AUDIO_WORKLET != 'undefined' && ENVIRONMENT_IS_AUDIO_WORKLET)) Module['preRun'] = [];
     var necessaryPreJSTasks = Module['preRun'].slice();
-  // end include: /var/folders/1s/t2864kcd3859g116zyr1fth80000gn/T/tmpbgnbt_zx.js
-// include: /var/folders/1s/t2864kcd3859g116zyr1fth80000gn/T/tmp4l0o7g7i.js
+  // end include: /var/folders/1s/t2864kcd3859g116zyr1fth80000gn/T/tmppoehqinw.js
+// include: /var/folders/1s/t2864kcd3859g116zyr1fth80000gn/T/tmpsygspv9j.js
 
     if (!Module['preRun']) throw 'Module.preRun should exist because file support used it; did a pre-js delete it?';
     necessaryPreJSTasks.forEach((task) => {
       if (Module['preRun'].indexOf(task) < 0) throw 'All preRun tasks that exist before user pre-js code should remain after; did you replace Module or modify Module.preRun?';
     });
-  // end include: /var/folders/1s/t2864kcd3859g116zyr1fth80000gn/T/tmp4l0o7g7i.js
+  // end include: /var/folders/1s/t2864kcd3859g116zyr1fth80000gn/T/tmpsygspv9j.js
 
 
 var programArgs = [];
@@ -8732,7 +8732,78 @@ var UTF8Decoder = globalThis.TextDecoder && new TextDecoder();
 
 
 
-  var requestFullscreen = Browser.requestFullscreen;
+  var getCFunc = (ident) => {
+      var func = Module['_' + ident]; // closure exported function
+      assert(func, `Cannot call unknown function ${ident}, make sure it is exported`);
+      return func;
+    };
+  
+  var writeArrayToMemory = (array, buffer) => {
+      assert(array.length >= 0, 'writeArrayToMemory array must have a length (should be an array or typed array)')
+      HEAP8.set(array, buffer);
+    };
+  
+  
+  
+  
+  
+  
+    /**
+   * @param {string|null=} returnType
+   * @param {Array=} argTypes
+   * @param {Array=} args
+   * @param {Object=} opts
+   */
+  var ccall = (ident, returnType, argTypes, args, opts) => {
+      // For fast lookup of conversion functions
+      var toC = {
+        'string': (str) => {
+          var ret = 0;
+          if (str !== null && str !== undefined && str !== 0) { // null string
+            ret = stringToUTF8OnStack(str);
+          }
+          return ret;
+        },
+        'array': (arr) => {
+          var ret = stackAlloc(arr.length);
+          writeArrayToMemory(arr, ret);
+          return ret;
+        }
+      };
+  
+      function convertReturnValue(ret) {
+        if (returnType === 'string') {
+          return UTF8ToString(ret);
+        }
+        if (returnType === 'boolean') return Boolean(ret);
+        return ret;
+      }
+  
+      var func = getCFunc(ident);
+      var cArgs = [];
+      var stack = 0;
+      assert(returnType !== 'array', 'return type should not be "array"');
+      if (args) {
+        for (var i = 0; i < args.length; i++) {
+          var converter = toC[argTypes[i]];
+          if (converter) {
+            if (!stack) stack = stackSave();
+            cArgs[i] = converter(args[i]);
+          } else {
+            cArgs[i] = args[i];
+          }
+        }
+      }
+      var ret = func(...cArgs);
+      function onDone(ret) {
+        if (stack) stackRestore(stack);
+        return convertReturnValue(ret);
+      }
+  
+      ret = onDone(ret);
+      return ret;
+    };
+
 
   var FS_createPath = (...args) => FS.createPath(...args);
 
@@ -8818,12 +8889,13 @@ if (Module['printErr']) err = Module['printErr'];
 // Begin runtime exports
   Module['addRunDependency'] = addRunDependency;
   Module['removeRunDependency'] = removeRunDependency;
-  Module['requestFullscreen'] = requestFullscreen;
+  Module['ccall'] = ccall;
   Module['createContext'] = createContext;
   Module['FS_preloadFile'] = FS_preloadFile;
   Module['FS_unlink'] = FS_unlink;
   Module['FS_createPath'] = FS_createPath;
   Module['FS_createDevice'] = FS_createDevice;
+  Module['FS'] = FS;
   Module['FS_createDataFile'] = FS_createDataFile;
   Module['FS_createLazyFile'] = FS_createLazyFile;
   var missingLibrarySymbols = [
@@ -8860,7 +8932,6 @@ if (Module['printErr']) err = Module['printErr'];
   'STACK_ALIGN',
   'POINTER_SIZE',
   'ASSERTIONS',
-  'ccall',
   'cwrap',
   'convertJsFunctionToWasm',
   'getEmptyTableSlot',
@@ -8878,7 +8949,6 @@ if (Module['printErr']) err = Module['printErr'];
   'UTF32ToString',
   'stringToUTF32',
   'lengthBytesUTF32',
-  'writeArrayToMemory',
   'fillDeviceOrientationEventData',
   'registerDeviceOrientationEventCallback',
   'fillDeviceMotionEventData',
@@ -9010,6 +9080,7 @@ missingLibrarySymbols.forEach(missingLibrarySymbol)
   'UTF16Decoder',
   'stringToNewUTF8',
   'stringToUTF8OnStack',
+  'writeArrayToMemory',
   'JSEvents',
   'registerKeyEventCallback',
   'specialHTMLTargets',
@@ -9058,6 +9129,7 @@ missingLibrarySymbols.forEach(missingLibrarySymbol)
   'promiseMap',
   'exceptionCaught',
   'Browser',
+  'requestFullscreen',
   'setCanvasSize',
   'getUserMedia',
   'getPreloadedImageData__data',
@@ -9075,7 +9147,6 @@ missingLibrarySymbols.forEach(missingLibrarySymbol)
   'FS_stdin_getChar_buffer',
   'FS_stdin_getChar',
   'FS_readFile',
-  'FS',
   'FS_root',
   'FS_mounts',
   'FS_devices',
@@ -9274,6 +9345,7 @@ var ASM_CONSTS = {
 };
 
 // Imports from the Wasm binary.
+var _loadGame = Module['_loadGame'] = makeInvalidEarlyAccess('_loadGame');
 var _main = Module['_main'] = makeInvalidEarlyAccess('_main');
 var _malloc = makeInvalidEarlyAccess('_malloc');
 var _strerror = makeInvalidEarlyAccess('_strerror');
@@ -9292,6 +9364,7 @@ var wasmMemory = makeInvalidEarlyAccess('wasmMemory');
 var wasmTable = makeInvalidEarlyAccess('wasmTable');
 
 function assignWasmExports(wasmExports) {
+  assert(typeof wasmExports['loadGame'] != 'undefined', 'missing Wasm export: loadGame');
   assert(typeof wasmExports['__main_argc_argv'] != 'undefined', 'missing Wasm export: __main_argc_argv');
   assert(typeof wasmExports['malloc'] != 'undefined', 'missing Wasm export: malloc');
   assert(typeof wasmExports['strerror'] != 'undefined', 'missing Wasm export: strerror');
@@ -9306,6 +9379,7 @@ function assignWasmExports(wasmExports) {
   assert(typeof wasmExports['emscripten_stack_get_current'] != 'undefined', 'missing Wasm export: emscripten_stack_get_current');
   assert(typeof wasmExports['memory'] != 'undefined', 'missing Wasm export: memory');
   assert(typeof wasmExports['__indirect_function_table'] != 'undefined', 'missing Wasm export: __indirect_function_table');
+  _loadGame = Module['_loadGame'] = createExportWrapper('loadGame', wasmExports['loadGame'], 2);
   _main = Module['_main'] = createExportWrapper('__main_argc_argv', wasmExports['__main_argc_argv'], 2);
   _malloc = createExportWrapper('malloc', wasmExports['malloc'], 1);
   _strerror = createExportWrapper('strerror', wasmExports['strerror'], 1);
