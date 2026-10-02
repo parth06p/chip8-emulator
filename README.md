@@ -22,6 +22,9 @@ Passes the Corax+ opcode test, the flags test, the keypad test, and the quirks t
 |---|---|
 | ![Corax+ results](docs/all_commands.png) | ![Flags results](docs/flags.png) |
 
+|GAMEPLAY|
+![Gameplay](docs/gameplay.gif)
+
 ## Building
 
 Requires a C++17 compiler and CMake 3.16 or newer. SDL2 is downloaded and built automatically by CMake, so there's nothing else to install.
